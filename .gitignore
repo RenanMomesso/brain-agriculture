@@ -23,3 +23,8 @@ npm-debug.log*
 
 # Testes
 .tmp/
+# Notas pessoais (nao versionar)
+docs/ENTREVISTA.md
+docs/EXPLICACAO_PROJETO.md
+docs/apresentacao.md
+docs/architecture.md
