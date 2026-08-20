@@ -19,6 +19,7 @@ API REST para gestão de **produtores rurais**, suas **fazendas**, **safras** e 
 - [Como rodar](#como-rodar)
   - [Docker (recomendado)](#docker-recomendado)
   - [Local (sem Docker)](#local-sem-docker)
+- [Deploy na nuvem (Render)](#deploy-na-nuvem-render)
 - [Seed (dados mockados)](#seed-dados-mockados)
 - [Testes](#testes)
 - [Observabilidade](#observabilidade)
@@ -212,6 +213,31 @@ npm run start:dev           # http://localhost:3000/api
 | `DB_SSL` | `false` | `true` quando o Postgres exige TLS (provedores gerenciados) |
 | `DB_LOGGING` | `false` | `true` habilita log de queries SQL |
 | `MIGRATIONS_RUN_ON_START` | - | `true` executa migrations no boot (usado no Docker/nuvem) |
+
+## Deploy na nuvem (Render)
+
+O repositório já traz um [`render.yaml`](render.yaml) — um *blueprint* que cria o Postgres gerenciado e a API em um único deploy, injetando as credenciais do banco no serviço automaticamente.
+
+1. Suba este repositório para o GitHub.
+2. No [dashboard do Render](https://dashboard.render.com): **New → Blueprint** e selecione o repositório.
+3. Confirme. O Render cria `brain-agriculture-db` (Postgres) e `brain-agriculture-api` (Docker), lê o `Dockerfile` e faz o build.
+4. No boot, `MIGRATIONS_RUN_ON_START=true` aplica as migrations pendentes — não é preciso rodar nada manualmente.
+5. O health check aponta para `/api/health`; quando ficar verde, a API está no ar em `https://<seu-servico>.onrender.com/api` e o Swagger em `/api/docs`.
+
+Para popular o banco com os dados mockados, use o **Shell** do serviço no Render:
+
+```bash
+node dist/database/seeds/seed.js
+```
+
+### Variáveis já definidas pelo blueprint
+
+`NODE_ENV=production` (desliga `synchronize`, o schema vem só das migrations), `DB_SSL=true` (o Postgres do Render exige TLS), `MIGRATIONS_RUN_ON_START=true` e `DB_HOST/PORT/USER/PASS/NAME` vindos do banco via `fromDatabase`.
+
+### Limitações do plano gratuito
+
+- A instância web **hiberna após 15 minutos sem tráfego**; a primeira requisição depois disso leva ~30–50s para responder.
+- O Postgres gratuito do Render **expira em 30 dias**. Para uma demo de longa duração, aponte `DB_HOST/USER/PASS/NAME` para um Postgres externo sem prazo (ex.: Neon) e remova o bloco `databases` do `render.yaml`.
 
 ## Seed (dados mockados)
 

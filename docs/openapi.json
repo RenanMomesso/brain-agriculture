@@ -1,1 +1,364 @@
-{"openapi":"3.0.0","paths":{"/api/health":{"get":{"operationId":"AppController_health","parameters":[],"responses":{"200":{"description":"Aplicação saudável"}},"summary":"Verifica a saúde da aplicação","tags":["health"]}},"/api/producers":{"post":{"operationId":"ProducersController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateProducerDto"}}}},"responses":{"201":{"description":"Produtor criado"},"400":{"description":"Dados inválidos (CPF/CNPJ, áreas, culturas)"},"409":{"description":"Documento já cadastrado"}},"summary":"Cadastra um produtor rural com suas fazendas, safras e culturas","tags":["producers"]},"get":{"operationId":"ProducersController_findAll","parameters":[{"name":"limit","required":false,"in":"query","schema":{"example":10}},{"name":"page","required":false,"in":"query","schema":{"example":1}}],"responses":{"200":{"description":"Lista de produtores"}},"summary":"Lista produtores (paginado)","tags":["producers"]}},"/api/producers/{id}":{"get":{"operationId":"ProducersController_findOne","parameters":[{"name":"id","required":true,"in":"path","schema":{"format":"uuid","type":"string"}}],"responses":{"200":{"description":"Produtor encontrado"},"404":{"description":"Produtor não encontrado"}},"summary":"Busca um produtor pelo id","tags":["producers"]},"patch":{"operationId":"ProducersController_update","parameters":[{"name":"id","required":true,"in":"path","schema":{"format":"uuid","type":"string"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateProducerDto"}}}},"responses":{"200":{"description":"Produtor atualizado"},"400":{"description":"Dados inválidos"},"404":{"description":"Produtor não encontrado"}},"summary":"Edita um produtor (nome e/ou substitui a lista de fazendas)","tags":["producers"]},"delete":{"operationId":"ProducersController_remove","parameters":[{"name":"id","required":true,"in":"path","schema":{"format":"uuid","type":"string"}}],"responses":{"204":{"description":"Produtor excluído"},"404":{"description":"Produtor não encontrado"}},"summary":"Exclui um produtor e todas as suas fazendas","tags":["producers"]}},"/api/dashboard":{"get":{"operationId":"DashboardController_getDashboard","parameters":[],"responses":{"200":{"description":"Dados do dashboard"}},"summary":"Indicadores do dashboard (totais e dados para gráficos de pizza)","tags":["dashboard"]}}},"info":{"title":"Brain Agriculture API","description":"API de gestão de produtores rurais, fazendas, safras e culturas","version":"1.0.0","contact":{}},"tags":[{"name":"producers","description":"Cadastro de produtores rurais"},{"name":"dashboard","description":"Indicadores e gráficos"}],"servers":[],"components":{"schemas":{"CropDto":{"type":"object","properties":{"name":{"type":"string","enum":["SOJA","MILHO","ALGODAO","CAFE","CANA_DE_ACUCAR"],"maxLength":40}},"required":["name"]},"HarvestDto":{"type":"object","properties":{"label":{"type":"string","maxLength":80},"year":{"type":"number","minimum":1900},"crops":{"maxItems":20,"type":"array","items":{"$ref":"#/components/schemas/CropDto"}}},"required":["label","year"]},"FarmDto":{"type":"object","properties":{"name":{"type":"string","maxLength":140},"city":{"type":"string","maxLength":120},"state":{"type":"string","maxLength":2},"totalArea":{"type":"number","minimum":0},"agriculturalArea":{"type":"number","minimum":0},"vegetationArea":{"type":"number","minimum":0},"harvests":{"maxItems":20,"type":"array","items":{"$ref":"#/components/schemas/HarvestDto"}}},"required":["name","city","state","totalArea","agriculturalArea","vegetationArea"]},"CreateProducerDto":{"type":"object","properties":{"document":{"type":"string"},"name":{"type":"string","maxLength":140},"farms":{"maxItems":50,"type":"array","items":{"$ref":"#/components/schemas/FarmDto"}}},"required":["document","name"]},"UpdateProducerDto":{"type":"object","properties":{"name":{"type":"string","maxLength":140},"farms":{"maxItems":50,"type":"array","items":{"$ref":"#/components/schemas/FarmDto"}}}}}}}
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/api/health": {
+            "get": {
+                "operationId": "AppController_health",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Aplica\u00e7\u00e3o saud\u00e1vel"
+                    }
+                },
+                "summary": "Verifica a sa\u00fade da aplica\u00e7\u00e3o",
+                "tags": [
+                    "health"
+                ]
+            }
+        },
+        "/api/producers": {
+            "post": {
+                "operationId": "ProducersController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProducerDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Produtor criado"
+                    },
+                    "400": {
+                        "description": "Dados inv\u00e1lidos (CPF/CNPJ, \u00e1reas, culturas)"
+                    },
+                    "409": {
+                        "description": "Documento j\u00e1 cadastrado"
+                    }
+                },
+                "summary": "Cadastra um produtor rural com suas fazendas, safras e culturas",
+                "tags": [
+                    "producers"
+                ]
+            },
+            "get": {
+                "operationId": "ProducersController_findAll",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de produtores"
+                    }
+                },
+                "summary": "Lista produtores (paginado)",
+                "tags": [
+                    "producers"
+                ]
+            }
+        },
+        "/api/producers/{id}": {
+            "get": {
+                "operationId": "ProducersController_findOne",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produtor encontrado"
+                    },
+                    "404": {
+                        "description": "Produtor n\u00e3o encontrado"
+                    }
+                },
+                "summary": "Busca um produtor pelo id",
+                "tags": [
+                    "producers"
+                ]
+            },
+            "patch": {
+                "operationId": "ProducersController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProducerDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produtor atualizado"
+                    },
+                    "400": {
+                        "description": "Dados inv\u00e1lidos"
+                    },
+                    "404": {
+                        "description": "Produtor n\u00e3o encontrado"
+                    }
+                },
+                "summary": "Edita um produtor (nome e/ou substitui a lista de fazendas)",
+                "tags": [
+                    "producers"
+                ]
+            },
+            "delete": {
+                "operationId": "ProducersController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Produtor exclu\u00eddo"
+                    },
+                    "404": {
+                        "description": "Produtor n\u00e3o encontrado"
+                    }
+                },
+                "summary": "Exclui um produtor e todas as suas fazendas",
+                "tags": [
+                    "producers"
+                ]
+            }
+        },
+        "/api/dashboard": {
+            "get": {
+                "operationId": "DashboardController_getDashboard",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Dados do dashboard"
+                    }
+                },
+                "summary": "Indicadores do dashboard (totais e dados para gr\u00e1ficos de pizza)",
+                "tags": [
+                    "dashboard"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Brain Agriculture API",
+        "description": "API de gest\u00e3o de produtores rurais, fazendas, safras e culturas",
+        "version": "1.0.0",
+        "contact": {}
+    },
+    "tags": [
+        {
+            "name": "producers",
+            "description": "Cadastro de produtores rurais"
+        },
+        {
+            "name": "dashboard",
+            "description": "Indicadores e gr\u00e1ficos"
+        }
+    ],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "CropDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "enum": [
+                            "SOJA",
+                            "MILHO",
+                            "ALGODAO",
+                            "CAFE",
+                            "CANA_DE_ACUCAR"
+                        ],
+                        "maxLength": 40
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "HarvestDto": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "maxLength": 80
+                    },
+                    "year": {
+                        "type": "number",
+                        "minimum": 1900
+                    },
+                    "crops": {
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CropDto"
+                        }
+                    }
+                },
+                "required": [
+                    "label",
+                    "year"
+                ]
+            },
+            "FarmDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 140
+                    },
+                    "city": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "AC",
+                            "AL",
+                            "AP",
+                            "AM",
+                            "BA",
+                            "CE",
+                            "DF",
+                            "ES",
+                            "GO",
+                            "MA",
+                            "MT",
+                            "MS",
+                            "MG",
+                            "PA",
+                            "PB",
+                            "PR",
+                            "PE",
+                            "PI",
+                            "RJ",
+                            "RN",
+                            "RS",
+                            "RO",
+                            "RR",
+                            "SC",
+                            "SP",
+                            "SE",
+                            "TO"
+                        ]
+                    },
+                    "totalArea": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "agriculturalArea": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "vegetationArea": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "harvests": {
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HarvestDto"
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "city",
+                    "state",
+                    "totalArea",
+                    "agriculturalArea",
+                    "vegetationArea"
+                ]
+            },
+            "CreateProducerDto": {
+                "type": "object",
+                "properties": {
+                    "document": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 140
+                    },
+                    "farms": {
+                        "maxItems": 50,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FarmDto"
+                        }
+                    }
+                },
+                "required": [
+                    "document",
+                    "name"
+                ]
+            },
+            "UpdateProducerDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 140
+                    },
+                    "farms": {
+                        "maxItems": 50,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FarmDto"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

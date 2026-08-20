@@ -18,6 +18,7 @@ import { dataSourceOptions } from './database/data-source';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+    // '{*path}' é a sintaxe do path-to-regexp usado pelo Express 5
+    consumer.apply(RequestLoggerMiddleware).forRoutes('{*path}');
   }
 }

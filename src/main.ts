@@ -37,7 +37,8 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup('api/docs', app, document);
 
   const port = Number(process.env.PORT ?? 3000);
-  await app.listen(port);
+  // '0.0.0.0' é exigido por plataformas em container (Render, Fly, Railway)
+  await app.listen(port, '0.0.0.0');
 
   Logger.log(`API disponível em http://localhost:${port}/api`, 'Bootstrap');
   Logger.log(`Swagger em http://localhost:${port}/api/docs`, 'Bootstrap');

@@ -1,0 +1,48 @@
+# Blueprint do Render — cria o Postgres e a API em um único deploy.
+# Uso: Render Dashboard > New > Blueprint > aponte para este repositório.
+databases:
+  - name: brain-agriculture-db
+    databaseName: brain_agriculture
+    user: brain_agriculture
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: brain-agriculture-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      # Executa as migrations pendentes no boot do container.
+      - key: MIGRATIONS_RUN_ON_START
+        value: 'true'
+      # O Postgres gerenciado do Render exige TLS.
+      - key: DB_SSL
+        value: 'true'
+      - key: DB_HOST
+        fromDatabase:
+          name: brain-agriculture-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: brain-agriculture-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: brain-agriculture-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: brain-agriculture-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: brain-agriculture-db
+          property: database
