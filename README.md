@@ -224,10 +224,16 @@ O repositório já traz um [`render.yaml`](render.yaml) — um *blueprint* que c
 4. No boot, `MIGRATIONS_RUN_ON_START=true` aplica as migrations pendentes — não é preciso rodar nada manualmente.
 5. O health check aponta para `/api/health`; quando ficar verde, a API está no ar em `https://<seu-servico>.onrender.com/api` e o Swagger em `/api/docs`.
 
-Para popular o banco com os dados mockados, use o **Shell** do serviço no Render:
+Para popular o banco com os dados mockados: o Shell do Render só existe em planos pagos, então rode o seed **da sua máquina** apontando para a *External Database URL* do banco (Render → banco → *Connections*):
 
 ```bash
-node dist/database/seeds/seed.js
+DB_HOST=<host>.oregon-postgres.render.com \
+DB_PORT=5432 \
+DB_USER=brain_agriculture \
+DB_PASS=<senha> \
+DB_NAME=brain_agriculture \
+DB_SSL=true \
+npm run seed
 ```
 
 ### Variáveis já definidas pelo blueprint
