@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiQuery,
   ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 import {
   CreateProducerDto,
@@ -40,6 +41,31 @@ export class ProducersController {
     description: 'Dados inválidos (CPF/CNPJ, áreas, culturas)',
   })
   @ApiResponse({ status: 409, description: 'Documento já cadastrado' })
+  @ApiBody({
+    schema: {
+      example: {
+        document: '52998224725',
+        name: 'João Alves Pereira',
+        farms: [
+          {
+            name: 'Sítio São José',
+            city: 'Cascavel',
+            state: 'PR',
+            totalArea: 150,
+            agriculturalArea: 120,
+            vegetationArea: 30,
+            harvests: [
+              {
+                label: 'Safra 2022/2023',
+                year: 2023,
+                crops: [{ name: 'SOJA' }, { name: 'MILHO' }],
+              },
+            ],
+          },
+        ],
+      },
+    },
+  })
   create(@Body() dto: CreateProducerDto) {
     return this.producersService.create(dto);
   }
