@@ -210,6 +210,7 @@ npm run start:dev           # http://localhost:3000/api
 | `DB_USER` | `postgres` | Usuário do banco |
 | `DB_PASS` | `postgres` | Senha do banco |
 | `DB_NAME` | `brain_agriculture` | Nome do banco |
+| `DATABASE_URL` | - | Connection string completa; se definida, **tem prioridade** sobre `DB_HOST/PORT/USER/PASS/NAME` (usada em provedores gerenciados) |
 | `DB_SSL` | `false` | `true` quando o Postgres exige TLS (provedores gerenciados) |
 | `DB_LOGGING` | `false` | `true` habilita log de queries SQL |
 | `MIGRATIONS_RUN_ON_START` | - | `true` executa migrations no boot (usado no Docker/nuvem) |
@@ -227,18 +228,12 @@ O repositório já traz um [`render.yaml`](render.yaml) — um *blueprint* que c
 Para popular o banco com os dados mockados: o Shell do Render só existe em planos pagos, então rode o seed **da sua máquina** apontando para a *External Database URL* do banco (Render → banco → *Connections*):
 
 ```bash
-DB_HOST=<host>.oregon-postgres.render.com \
-DB_PORT=5432 \
-DB_USER=brain_agriculture \
-DB_PASS=<senha> \
-DB_NAME=brain_agriculture \
-DB_SSL=true \
-npm run seed
+DATABASE_URL='<External Database URL>' DB_SSL=true npm run seed
 ```
 
 ### Variáveis já definidas pelo blueprint
 
-`NODE_ENV=production` (desliga `synchronize`, o schema vem só das migrations), `DB_SSL=true` (o Postgres do Render exige TLS), `MIGRATIONS_RUN_ON_START=true` e `DB_HOST/PORT/USER/PASS/NAME` vindos do banco via `fromDatabase`.
+`NODE_ENV=production` (desliga `synchronize`, o schema vem só das migrations), `DB_SSL=true` (o Postgres do Render exige TLS), `MIGRATIONS_RUN_ON_START=true` e `DATABASE_URL` injetada a partir do banco via `fromDatabase`.
 
 ### Limitações do plano gratuito
 
