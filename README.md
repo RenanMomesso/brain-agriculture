@@ -7,6 +7,14 @@ API REST para gestão de **produtores rurais**, suas **fazendas**, **safras** e 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
 ![Testes](https://img.shields.io/badge/tests-37%20passing-brightgreen)
 
+### Demo ao vivo
+
+**Swagger UI:** <https://brain-agriculture-uhic.onrender.com/api/docs>
+
+A API está publicada no Render: <https://brain-agriculture-uhic.onrender.com/api>
+
+> A instância é do plano gratuito e **hiberna após 15 minutos sem tráfego** — a primeira requisição depois disso leva ~30–50s para responder. As seguintes são normais.
+
 ---
 
 ## Sumário
@@ -225,6 +233,8 @@ O repositório já traz um [`render.yaml`](render.yaml) — um *blueprint* que c
 4. No boot, `MIGRATIONS_RUN_ON_START=true` aplica as migrations pendentes — não é preciso rodar nada manualmente.
 5. O health check aponta para `/api/health`; quando ficar verde, a API está no ar em `https://<seu-servico>.onrender.com/api` e o Swagger em `/api/docs`.
 
+O deploy deste repositório está publicado em <https://brain-agriculture-uhic.onrender.com/api/docs>.
+
 Para popular o banco com os dados mockados: o Shell do Render só existe em planos pagos, então rode o seed **da sua máquina** apontando para a *External Database URL* do banco (Render → banco → *Connections*):
 
 ```bash
@@ -298,6 +308,14 @@ docker-compose.yml               # postgres + api
 ```
 
 ## Documentação da API
+
+**Produção (Render)**
+
+- **Swagger UI**: <https://brain-agriculture-uhic.onrender.com/api/docs>
+- **OpenAPI JSON**: <https://brain-agriculture-uhic.onrender.com/api/docs-json>
+- **Health check**: <https://brain-agriculture-uhic.onrender.com/api/health>
+
+**Local**
 
 - **Swagger UI**: `http://localhost:3000/api/docs`
 - **OpenAPI JSON**: `http://localhost:3000/api/docs-json`
